@@ -1,2 +1,2 @@
 # Train-Query
-Website that shows the details of a train based on its train number and name , Uses API from Rapid API of IRCTC to show the details of a train like all its stations , Departure time , Arrival Time , Total duration of a Train etc.
+A web application that allows users to fetch and view complete train details using IRCTC APIs from RapidAPI. By entering a train number or train name, users can access real-time and static information such as stations covered, departure and arrival times, total journey duration, and more.
