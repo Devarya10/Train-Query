@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Information</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .train-number {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .info-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        
+        .label {
+            font-weight: 600;
+            color: #555;
+            flex: 1;
+        }
+        
+        .value {
+            font-weight: 500;
+            color: #2c3e50;
+            flex: 2;
+            text-align: right;
+        }
+        
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .raw-data {
+            margin-top: 30px;
+            padding: 20px;
+            background: #2d3748;
+            border-radius: 10px;
+            color: #e2e8f0;
+        }
+        
+        .raw-data h3 {
+            color: #68d391;
+            margin-bottom: 15px;
+        }
+        
+        .raw-data pre {
+            background: #1a202c;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .not-available {
+            color: #888;
+            font-style: italic;
+        }
+        
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <% if (error) { %>
+            <div class="error">
+                <h2>❌ Error</h2>
+                <p><%= error %></p>
+            </div>
+            <div class="actions">
+                <a href="/" class="btn">🔍 Search Again</a>
+            </div>
+        <% } else if (trainData) { %>
+            <div class="header">
+                <h1>🚂 Train Information</h1>
+                <div class="train-number">
+                    Train #<%= trainData.train_number || trainData.trainNumber || trainData.number || 'Unknown' %>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Basic Information -->
+                <div class="info-section">
+                    <h3>🚆 Basic Details</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Train Name:</span>
+                            <span class="value">
+                                <%= trainData.train_name || trainData.trainName || trainData.name || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Train Type:</span>
+                            <span class="value">
+                                <%= trainData.train_type || trainData.trainType || trainData.type || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Source:</span>
+                            <span class="value">
+                                <%= trainData.source_station || trainData.sourceStation || trainData.from || trainData.origin || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Destination:</span>
+                            <span class="value">
+                                <%= trainData.destination_station || trainData.destinationStation || trainData.to || trainData.destination || 'N/A' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timing Information -->
+                <div class="info-section">
+                    <h3>⏰ Schedule</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Departure Time:</span>
+                            <span class="value">
+                                <%= trainData.departure_time || trainData.departureTime || trainData.dept_time || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Arrival Time:</span>
+                            <span class="value">
+                                <%= trainData.arrival_time || trainData.arrivalTime || trainData.arr_time || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Duration:</span>
+                            <span class="value">
+                                <%= trainData.duration || trainData.travel_time || trainData.travelTime || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Distance:</span>
+                            <span class="value">
+                                <%= trainData.distance || 'N/A' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Information -->
+                <div class="info-section">
+                    <h3>📊 Current Status</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Status:</span>
+                            <span class="value">
+                                <%= trainData.status || trainData.train_status || trainData.current_status || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Current Station:</span>
+                            <span class="value">
+                                <%= trainData.current_station || trainData.currentStation || trainData.last_station || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Platform:</span>
+                            <span class="value">
+                                <%= trainData.platform || trainData.platform_no || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Delay:</span>
+                            <span class="value">
+                                <%= trainData.delay || trainData.delayed_by || 'On Time' %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="info-section">
+                    <h3>ℹ️ Additional Details</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Classes:</span>
+                            <span class="value">
+                                <% if (trainData.classes || trainData.available_classes) { %>
+                                    <% const classes = trainData.classes || trainData.available_classes %>
+                                    <% if (Array.isArray(classes)) { %>
+                                        <%= classes.join(', ') %>
+                                    <% } else { %>
+                                        <%= classes %>
+                                    <% } %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Running Days:</span>
+                            <span class="value">
+                                <% if (trainData.running_days || trainData.runningDays) { %>
+                                    <% const days = trainData.running_days || trainData.runningDays %>
+                                    <% if (Array.isArray(days)) { %>
+                                        <%= days.join(', ') %>
+                                    <% } else { %>
+                                        <%= days %>
+                                    <% } %>
+                                <% } else { %>
+                                    N/A
+                                <% } %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Coaches:</span>
+                            <span class="value">
+                                <%= trainData.coaches || trainData.coach_count || 'N/A' %>
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Last Updated:</span>
+                            <span class="value">
+                                <%= new Date().toLocaleString() %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Route Information -->
+                <% if (trainData.route || trainData.stations || trainData.schedule) { %>
+                    <% const routeData = trainData.route || trainData.stations || trainData.schedule %>
+                    <% if (Array.isArray(routeData) && routeData.length > 0) { %>
+                        <div class="info-section">
+                            <h3>🛤️ Route Information</h3>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                <% routeData.slice(0, 10).forEach((station, index) => { %>
+                                    <div class="info-item">
+                                        <span class="label">Station <%= index + 1 %>:</span>
+                                        <span class="value">
+                                            <% if (typeof station === 'string') { %>
+                                                <%= station %>
+                                            <% } else { %>
+                                                <%= station.station_name || station.name || station.stationName || 'Unknown' %>
+                                                <% if (station.arrival_time || station.departure_time) { %>
+                                                    <br><small style="color: #666;">
+                                                        <% if (station.arrival_time) { %>Arr: <%= station.arrival_time %><% } %>
+                                                        <% if (station.departure_time) { %> | Dep: <%= station.departure_time %><% } %>
+                                                    </small>
+                                                <% } %>
+                                            <% } %>
+                                        </span>
+                                    </div>
+                                <% }) %>
+                                <% if (routeData.length > 10) { %>
+                                    <div class="info-item">
+                                        <span class="label"></span>
+                                        <span class="value" style="color: #666; font-style: italic;">
+                                            ... and <%= routeData.length - 10 %> more stations
+                                        </span>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } %>
+
+                <!-- Raw Data (for debugging) -->
+                <div class="raw-data">
+                    <h3>📋 Raw API Response</h3>
+                    <p style="margin-bottom: 15px; color: #a0aec0;">
+                        This shows the exact data received from the API:
+                    </p>
+                    <pre><%= JSON.stringify(trainData, null, 2) %></pre>
+                </div>
+
+                <div class="actions">
+                    <a href="/" class="btn">🔍 Search Again</a>
+                    <a href="javascript:window.print()" class="btn">🖨️ Print</a>
+                    <a href="javascript:window.location.reload()" class="btn">🔄 Refresh</a>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="error">
+                <h2>⚠️ No Data</h2>
+                <p>No train data available.</p>
+            </div>
+            <div class="actions">
+                <a href="/" class="btn">🔍 Search Again</a>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel='stylesheet' href='/style.css'>
+    <title>Train Status</title>
+</head>
+
+<body>
+    <h1>Train Query Solver</h1>
+    <form  action = "/submit" method='POST' id = "form">
+       
+        <input type="number" label ="Train number" name="number" id="trainnumber" placeholder="Enter Train Number" required min ="10000" max = "99999" oninput = "if(this.value > 5 ) this.value = this.value.slice(0,5);">
+         <button type="submit">Search</button>
+    </form>
+      
+</body>
+
+</html>
